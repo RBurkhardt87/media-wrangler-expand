@@ -22,7 +22,6 @@ const MovieReviewListCard = ({ rating, award, review, username, firstname, lastn
   //NOTE: I can use this state value as a dependency that will retrigger when a comment is edited... 
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [showButtonsTrigger, setShowButtonsTrigger] = useState(false);
-
    
   
   const { user } = useAuth();
@@ -97,11 +96,7 @@ const MovieReviewListCard = ({ rating, award, review, username, firstname, lastn
       const responseMessage = await submitUserComment(userCommentData); 
 
       if (responseMessage === "Success") {
-        console.log("Comment saved successfully!");
-
-
-        handleCommentUpdate();
-        
+        handleCommentUpdate();        
       } else {
         setError(responseMessage);
       }
@@ -175,7 +170,7 @@ const MovieReviewListCard = ({ rating, award, review, username, firstname, lastn
             <Button size="small" onClick={handleCommentClick} >Comment</Button>
           </CardActions>
 
-          
+
           {showComments && userComments.map(comment => (
             <CommentCard 
               key={comment.id} 

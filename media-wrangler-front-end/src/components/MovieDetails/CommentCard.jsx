@@ -7,6 +7,7 @@ import { updateComment, deleteComment } from '../../Services/CommentService';
 import { useNavigate } from 'react-router-dom';
 import { submitUserReply, fetchRepliesByCommentId } from '../../Services/ReplyService';
 import ReplyCard from './ReplyCard';
+import PropTypes from 'prop-types';
 
 
 const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
@@ -34,8 +35,8 @@ const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
         }
     }, [user, comment.userId, comment.userComment, showButtonTrigger]);
 
-
     const commentId = comment.id;
+
     useEffect(() => {
         async function fetchReplies() {
           const data = await fetchRepliesByCommentId(commentId);  
@@ -80,7 +81,6 @@ const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
 
         if (response === "Success") {
             onUpdate();
-            console.log("Comment deletion successful");
         } else {
             console.error("Failed to delete comment");
         }
@@ -113,56 +113,50 @@ const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
     async function handleSaveReply(e) {
         e.preventDefault();
 
-        if(!user) {
+        if (!user) {
           alert("You must be logged in to write a reply");
           navigate('/login');
         }
-        if(!userReply) {   
+
+        if (!userReply) {   
             alert("You must write a reply or press cancel");
             return;
-          }
+        }
           
-          const userId = user.id;
-          const commentId = comment.id;
-      
-          const userReplyData = { 
+        const userId = user.id;
+        const commentId = comment.id;
+    
+        const userReplyData = { 
             userReply,
             userId,
             commentId, 
             username: user.username,
             firstname: user.firstname,
             lastname: user.lastname   
-          }
-      
-
-          console.log("This is the userReplyData:", userReplyData);
+        }
+    
        
         
-          try {
-            const responseMessage = await submitUserReply(userReplyData); 
-      
-            if (responseMessage === "Success") {
-                handleReplyUpdate();
-                console.log("Comment saved successfully!");
-              
-            } else {
-              setError(responseMessage);
-            }
-            
-          } catch (error) {
-              console.error("Unexpected error during user reply submission: ", error);
-              setError({error: "An unexpected error occurred. Please try again"});
-      
-          } finally {
-            setUserReply('');
-            setShowReplyBox(false); 
-          }
-        };
-
-
-     
+        try {
+        const responseMessage = await submitUserReply(userReplyData); 
     
-
+        if (responseMessage === "Success") {
+            handleReplyUpdate();              
+        } else {
+            setError(responseMessage);
+        }
+        
+        } catch (error) {
+            console.error("Unexpected error during user reply submission: ", error);
+            setError({error: "An unexpected error occurred. Please try again"});
+    
+        } finally {
+        setUserReply('');
+        setShowReplyBox(false); 
+        }
+    };
+  
+    
 
 
     return (
@@ -226,6 +220,8 @@ const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
                         </div>
                     )}
                 </CardActions>
+
+
                 <Divider sx={{
                         margin: "15px",
                         backgroundColor: "white", 
@@ -280,3 +276,9 @@ const CommentCard = ({ comment, onUpdate, showButtonTrigger }) => {
 };
 
 export default CommentCard;
+
+CommentCard.propTypes = {
+  comment: PropTypes.object,
+  onUpdate: PropTypes.func,
+  showButtonTrigger: PropTypes.bool
+}

@@ -3,6 +3,7 @@ import { Typography, Button, Card, CardActions, TextField, CardContent, Divider 
 import AvatarHeader from '../Profile/AvatarHeader';
 import { useAuth } from '../../Services/AuthContext';
 import { updateReply } from '../../Services/ReplyService';
+import PropTypes from 'prop-types';
 
 const ReplyCard = ({ userReply, onUpdate, showButtonTrigger }) => {
 
@@ -17,7 +18,7 @@ const ReplyCard = ({ userReply, onUpdate, showButtonTrigger }) => {
         if (user.id === userReply.userId) {
             setShowUserButtons(true);
         } 
-    }, [user, userReply]);
+    }, [user, userReply, showButtonTrigger]);
 
 
     function handleEditClick() {
@@ -119,3 +120,9 @@ const ReplyCard = ({ userReply, onUpdate, showButtonTrigger }) => {
 }
 
 export default ReplyCard
+
+ReplyCard.propTypes = {
+  userReply: PropTypes.object,
+  onUpdate: PropTypes.func,
+  showButtonTrigger: PropTypes.bool
+}
